@@ -128,6 +128,7 @@ uvc_frame_t *UVCPreview::get_frame(size_t data_bytes) {
 		LOGW("allocate new frame");
 		frame = uvc_allocate_frame(data_bytes);
 	}
+	LOGW("get_frame called"); //SEAN this is where the frame gets printed
 	return frame;
 }
 
@@ -550,7 +551,8 @@ void UVCPreview::do_preview(uvc_stream_ctrl_t *ctrl) {
 			for ( ; LIKELY(isRunning()) ; ) {
 				frame_mjpeg = waitPreviewFrame();
 				if (LIKELY(frame_mjpeg)) {
-					frame = get_frame(frame_mjpeg->width * frame_mjpeg->height * 2);
+					frame = get_frame(frame_mjpeg->width * frame_mjpeg->height * 2); //SEAN this is where getframe is called
+					//SEAN you might be able to do the processing here, you might want to do it higher up somewhere, possible back in kotlin
 					result = uvc_mjpeg2yuyv(frame_mjpeg, frame);   // MJPEG => yuyv
 					recycle_frame(frame_mjpeg);
 					if (LIKELY(!result)) {
